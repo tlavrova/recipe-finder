@@ -2,6 +2,8 @@
   width: 100%;
   max-width: 800px;
   margin: 0 auto 24px;
+  padding: 0 12px;
+  box-sizing: border-box;
 }
 
 .search-form {
@@ -50,63 +52,106 @@
   color: #666;
   margin-left: 6px;
   cursor: pointer;
-  font-size: 1.2rem;
-  line-height: 1;
-  padding: 0 2px;
+  font-size: 16px;
 }
 
-.remove-ingredient:hover {
-  color: #e53935;
-}
-
-.ingredient-input {
+.search-input {
   flex: 1;
   border: none;
-  outline: none;
-  padding: 8px 0;
-  min-width: 120px;
+  padding: 12px 16px;
   font-size: 1rem;
+  outline: none;
+  min-width: 120px;
 }
 
-.add-ingredient-btn {
-  background-color: #f5f5f5;
-  border: none;
-  border-left: 1px solid #e0e0e0;
-  padding: 0 16px;
-  color: #555;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.add-ingredient-btn:hover {
-  background-color: #e0e0e0;
-}
-
-.search-btn {
+.search-button {
   background-color: #2c3e50;
   color: white;
   border: none;
   border-radius: 8px;
-  padding: 12px 24px;
+  padding: 10px 20px;
   font-size: 1rem;
-  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.search-btn:hover {
-  background-color: #1a2530;
+.search-button:hover {
+  background-color: #1a252f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-@media (max-width: 600px) {
-  .search-input-container {
-    flex-direction: column;
+.search-button:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+/* Specific styling for the Find Recipes button */
+.search-form > .search-button {
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px 20px;
+  border-radius: 30px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Specific styling for the Add button */
+.search-input-container .search-button {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+/* Responsive styling for search bar */
+@media (max-width: 768px) {
+  .search-bar-container {
+    margin-bottom: 20px;
   }
 
-  .add-ingredient-btn {
-    border-left: none;
-    border-top: 1px solid #e0e0e0;
-    padding: 8px;
+  .search-input {
+    font-size: 0.9rem;
+    padding: 10px 12px;
+  }
+
+  .search-button {
+    padding: 0 16px;
+    font-size: 0.9rem;
+    min-width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-form {
+    gap: 8px;
+  }
+
+  .ingredient-tags {
+    padding: 6px 8px;
+    min-height: 40px;
+  }
+
+  .ingredient-tag {
+    padding: 3px 8px;
+    font-size: 0.8rem;
+  }
+
+  .remove-ingredient {
+    font-size: 14px;
+  }
+
+  .search-input {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+
+  .search-button {
+    padding: 0 12px;
+    font-size: 0.85rem;
+    min-width: 70px;
   }
 }

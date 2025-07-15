@@ -90,16 +90,16 @@ const SearchBar: React.FC<SearchBarProps> = ({
               value={inputValue}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
-              className="ingredient-input"
+              className="search-input"
               placeholder={ingredients.length === 0 ? placeholder : ''}
               aria-label="Enter ingredient"
             />
           </div>
-          <button type="button" onClick={addIngredient} className="add-ingredient-btn">
+          <button type="button" onClick={addIngredient} className="search-button">
             Add
           </button>
         </div>
-        <button type="submit" className="search-btn">
+        <button type="submit" className="search-button">
           Find Recipes
         </button>
       </form>

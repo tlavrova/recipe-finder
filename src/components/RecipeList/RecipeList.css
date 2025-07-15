@@ -15,6 +15,7 @@
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px;
   justify-content: center;
+  width: 100%;
 }
 
 .recipe-list-empty {
@@ -24,6 +25,9 @@
   border-radius: 8px;
   font-size: 1.1rem;
   color: #666;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 10px;
 }
 
 /* Responsive adjustments */
@@ -31,5 +35,28 @@
   .recipe-list-grid {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 16px;
+    padding: 0 8px;
+  }
+
+  .recipe-list-title {
+    font-size: 1.6rem;
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .recipe-list-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .recipe-list-title {
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+  }
+
+  .recipe-list-empty {
+    padding: 20px;
+    font-size: 1rem;
   }
 }
