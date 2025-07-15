@@ -1,5 +1,5 @@
 import React from 'react';
-import './AdvancedFilters.css';
+import './CuisineSelector.css';
 import { CuisineType } from '../../types/Recipe';
 
 interface CuisineSelectorProps {

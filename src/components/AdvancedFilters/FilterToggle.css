@@ -1,0 +1,38 @@
+.advanced-filters-toggle {
+  background-color: transparent;
+  color: #2c3e50;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.advanced-filters-toggle:hover {
+  color: #1a252f;
+}
+
+.arrow-icon {
+  display: inline-block;
+  margin-left: 8px;
+  width: 0;
+  height: 0;
+  transition: transform 0.3s ease;
+}
+
+.arrow-icon.down {
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #2c3e50;
+}
+
+.arrow-icon.up {
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #2c3e50;
+}

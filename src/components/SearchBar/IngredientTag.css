@@ -1,0 +1,22 @@
+.ingredient-tag {
+  display: flex;
+  align-items: center;
+  background-color: #f0f4f8;
+  border-radius: 16px;
+  padding: 4px 10px;
+  font-size: 0.9rem;
+  color: #2c3e50;
+}
+
+.remove-ingredient {
+  background: none;
+  border: none;
+  color: #666;
+  margin-left: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.remove-ingredient:hover {
+  color: #c0392b;
+}

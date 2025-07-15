@@ -1,5 +1,5 @@
 import React from 'react';
-import './AdvancedFilters.css';
+import './DietaryOptions.css';
 import { DietaryPreference } from '../../types/Recipe';
 
 interface DietaryOptionsProps {

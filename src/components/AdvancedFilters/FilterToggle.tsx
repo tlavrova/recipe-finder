@@ -1,5 +1,5 @@
 import React from 'react';
-import './AdvancedFilters.css';
+import './FilterToggle.css';
 
 interface FilterToggleProps {
   isExpanded: boolean;
