@@ -1,47 +1,31 @@
 import React from 'react';
 import './RecipeCard.css';
-
-// Define the recipe interface
-interface Recipe {
-  id: string;
-  title: string;
-  image: string;
-  ingredients: string[];
-  instructions?: string;
-}
+import { Recipe } from '../types/Recipe';
+import RecipeImage from './RecipeImage/RecipeImage';
+import IngredientsList from './IngredientsList/IngredientsList';
+import Instructions from './Instructions/Instructions';
 
 interface RecipeCardProps {
   recipe: Recipe;
 }
 
 const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
+  const { title, image, ingredients, instructions } = recipe;
+
   return (
-    <div className="recipe-card">
-      <div className="recipe-card__image-container">
-        <img
-          src={recipe.image}
-          alt={recipe.title}
-          className="recipe-card__image"
-        />
-      </div>
+    <article className="recipe-card">
+      <RecipeImage src={image} alt={title} />
+
       <div className="recipe-card__content">
-        <h2 className="recipe-card__title">{recipe.title}</h2>
-        <div className="recipe-card__ingredients">
-          <h3>Ingredients:</h3>
-          <ul>
-            {recipe.ingredients.map((ingredient, index) => (
-              <li key={index}>{ingredient}</li>
-            ))}
-          </ul>
-        </div>
-        {recipe.instructions && (
-          <div className="recipe-card__instructions">
-            <h3>Instructions:</h3>
-            <p>{recipe.instructions}</p>
-          </div>
-        )}
+        <header>
+          <h2 className="recipe-card__title">{title}</h2>
+        </header>
+
+        <IngredientsList ingredients={ingredients} />
+
+        {instructions && <Instructions instructions={instructions} />}
       </div>
-    </div>
+    </article>
   );
 };
 
