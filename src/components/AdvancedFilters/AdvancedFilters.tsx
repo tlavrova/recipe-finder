@@ -2,15 +2,22 @@ import React, { useState } from 'react';
 import './AdvancedFilters.css';
 import { CuisineType, DietaryPreference } from '../../types/Recipe';
 
+// Import components from separate files
+import FilterToggle from './FilterToggle';
+import CuisineSelector from './CuisineSelector';
+import DietaryOptions from './DietaryOptions';
+
 interface AdvancedFiltersProps {
   onFilterChange: (cuisineType: string | null, dietaryPreferences: string[]) => void;
 }
 
+// Main component
 const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({ onFilterChange }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [selectedCuisine, setSelectedCuisine] = useState<string | null>(null);
   const [selectedDietary, setSelectedDietary] = useState<string[]>([]);
 
+  // Available filter options
   const cuisineTypes: CuisineType[] = [
     'Italian', 'Mexican', 'Chinese', 'Indian',
     'Japanese', 'Thai', 'Mediterranean', 'American',
@@ -22,8 +29,9 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({ onFilterChange }) => 
     'Low-Carb', 'Keto', 'Paleo', 'Nut-Free'
   ];
 
+  // Event handlers
   const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
+    setIsExpanded(prevState => !prevState);
   };
 
   const handleCuisineChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -47,53 +55,33 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({ onFilterChange }) => 
     onFilterChange(null, []);
   };
 
+  // Check if any filters are active
+  const hasActiveFilters = selectedCuisine || selectedDietary.length > 0;
+
   return (
     <div className="advanced-filters">
-      <button
-        className="advanced-filters-toggle"
-        onClick={toggleExpand}
-        aria-expanded={isExpanded}
-      >
-        {isExpanded ? 'Hide Advanced Filters' : 'Show Advanced Filters'}
-        <span className={`arrow-icon ${isExpanded ? 'up' : 'down'}`}></span>
-      </button>
+      <FilterToggle isExpanded={isExpanded} onClick={toggleExpand} />
 
       {isExpanded && (
         <div className="filters-container">
-          <div className="filter-section">
-            <h3>Cuisine Type</h3>
-            <select
-              value={selectedCuisine || ''}
-              onChange={handleCuisineChange}
-              className="cuisine-select"
+          <CuisineSelector
+            cuisineTypes={cuisineTypes}
+            selectedCuisine={selectedCuisine}
+            onChange={handleCuisineChange}
+          />
+
+          <DietaryOptions
+            preferences={dietaryPreferences}
+            selectedPreferences={selectedDietary}
+            onPreferenceToggle={handleDietaryChange}
+          />
+
+          {hasActiveFilters && (
+            <button
+              className="clear-filters-btn"
+              onClick={clearFilters}
+              aria-label="Clear all filters"
             >
-              <option value="">All Cuisines</option>
-              {cuisineTypes.map(cuisine => (
-                <option key={cuisine} value={cuisine}>
-                  {cuisine}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="filter-section">
-            <h3>Dietary Preferences</h3>
-            <div className="dietary-options">
-              {dietaryPreferences.map(preference => (
-                <label key={preference} className="dietary-option">
-                  <input
-                    type="checkbox"
-                    checked={selectedDietary.includes(preference)}
-                    onChange={() => handleDietaryChange(preference)}
-                  />
-                  <span>{preference}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {(selectedCuisine || selectedDietary.length > 0) && (
-            <button className="clear-filters-btn" onClick={clearFilters}>
               Clear Filters
             </button>
           )}
