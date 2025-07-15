@@ -1,0 +1,141 @@
+.advanced-filters {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 12px;
+  box-sizing: border-box;
+}
+
+.advanced-filters-toggle {
+  background-color: transparent;
+  color: #2c3e50;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.advanced-filters-toggle:hover {
+  color: #1a252f;
+}
+
+.arrow-icon {
+  display: inline-block;
+  margin-left: 8px;
+  width: 0;
+  height: 0;
+  transition: transform 0.3s ease;
+}
+
+.arrow-icon.down {
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #2c3e50;
+}
+
+.arrow-icon.up {
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #2c3e50;
+}
+
+.filters-container {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  animation: slide-down 0.3s ease-out forwards;
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.filter-section {
+  margin-bottom: 20px;
+}
+
+.filter-section h3 {
+  font-size: 1.1rem;
+  color: #2c3e50;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.cuisine-select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  color: #333;
+  background-color: white;
+  cursor: pointer;
+}
+
+.dietary-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.dietary-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 6px 0;
+}
+
+.dietary-option input {
+  margin-right: 8px;
+}
+
+.clear-filters-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.clear-filters-btn:hover {
+  background-color: #c0392b;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .dietary-options {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .dietary-options {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+
+  .filter-section h3 {
+    font-size: 1rem;
+  }
+
+  .filters-container {
+    padding: 12px;
+  }
+}

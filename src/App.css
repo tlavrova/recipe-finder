@@ -152,6 +152,22 @@
   margin: 0.5rem 0;
 }
 
+/* No recipes message */
+.no-recipes-message {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  color: #495057;
+  padding: 2rem;
+  border-radius: 8px;
+  margin: 2rem 0;
+  max-width: 600px;
+  text-align: center;
+}
+
+.no-recipes-message p {
+  margin: 0.5rem 0;
+}
+
 /* Responsive styling */
 @media (max-width: 768px) {
   .App-header h1 {
@@ -172,7 +188,8 @@
   }
 
   .no-favorites-message,
-  .error-container {
+  .error-container,
+  .no-recipes-message {
     margin: 1.5rem 0.75rem;
     padding: 1.5rem;
   }
