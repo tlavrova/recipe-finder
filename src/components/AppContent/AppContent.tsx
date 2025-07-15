@@ -1,41 +1,26 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './AppContent.css';
-import RecipeList from '../RecipeList/RecipeList';
-import SearchBar from '../SearchBar/SearchBar';
-import AdvancedFilters from '../AdvancedFilters/AdvancedFilters';
 import { Recipe } from '../../types/Recipe';
 import { RecipeService } from '../../services/RecipeService';
 import { useFavorites } from '../../context/FavoritesContext';
 import { FilterState } from '../../types/FilterState';
-import NoRecipesMessage from '../Messages/NoRecipesMessage';
-import LoadingIndicator from '../Messages/LoadingIndicator';
-import ErrorDisplay from '../Messages/ErrorDisplay';
+import Header from './Header/Header';
+import SearchAndFilters from './SearchAndFilters/SearchAndFilters';
+import ContentDisplay from './ContentDisplay/ContentDisplay';
 
 /**
- * Main application content component
+ * Custom hook to manage recipe state and operations
  */
-const AppContent: React.FC = () => {
-  // Recipe state
+const useRecipeManagement = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);
   const [displayedRecipes, setDisplayedRecipes] = useState<Recipe[]>([]);
-
-  // UI state
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [showFavorites, setShowFavorites] = useState<boolean>(false);
-
-  // Filter state
-  const [filters, setFilters] = useState<FilterState>({
-    cuisine: null,
-    dietary: []
-  });
-
   const { favorites } = useFavorites();
 
-  /**
-   * Load initial random recipes when app starts
-   */
+  // Load initial recipes
   useEffect(() => {
     const loadInitialRecipes = async (): Promise<void> => {
       try {
@@ -56,24 +41,7 @@ const AppContent: React.FC = () => {
     loadInitialRecipes();
   }, []);
 
-  /**
-   * Apply advanced filters whenever source recipes or filter settings change
-   */
-  useEffect(() => {
-    const sourceRecipes = showFavorites ? favorites : filteredRecipes;
-
-    const filtered = RecipeService.applyAdvancedFilters(
-      sourceRecipes,
-      filters.cuisine,
-      filters.dietary
-    );
-
-    setDisplayedRecipes(filtered);
-  }, [filteredRecipes, filters, favorites, showFavorites]);
-
-  /**
-   * Handle ingredient search
-   */
+  // Search handler
   const handleSearch = useCallback(async (ingredients: string[]): Promise<void> => {
     setShowFavorites(false);
 
@@ -86,15 +54,11 @@ const AppContent: React.FC = () => {
       setIsLoading(true);
       setError(null);
 
-      // TheMealDB API can only search for one ingredient at a time
-      // So we'll fetch recipes for each ingredient and combine them
       const recipePromises = ingredients.map(ingredient =>
         RecipeService.filterByIngredient(ingredient)
       );
 
       const recipeResults = await Promise.all(recipePromises);
-
-      // Flatten and remove duplicates
       const allRecipes = recipeResults.flat();
       const uniqueRecipes = allRecipes.filter(
         (recipe, index, self) => index === self.findIndex(r => r.id === recipe.id)
@@ -109,9 +73,53 @@ const AppContent: React.FC = () => {
     }
   }, [recipes]);
 
-  /**
-   * Handle filter changes
-   */
+  // Toggle favorites view
+  const toggleFavorites = useCallback((): void => {
+    setShowFavorites(prev => !prev);
+  }, []);
+
+  return {
+    recipes,
+    filteredRecipes,
+    displayedRecipes,
+    setDisplayedRecipes,
+    isLoading,
+    error,
+    showFavorites,
+    handleSearch,
+    toggleFavorites,
+    favorites
+  };
+};
+
+/**
+ * Custom hook to manage filtering operations
+ */
+const useRecipeFilters = (
+  filteredRecipes: Recipe[],
+  favorites: Recipe[],
+  showFavorites: boolean,
+  setDisplayedRecipes: React.Dispatch<React.SetStateAction<Recipe[]>>
+) => {
+  const [filters, setFilters] = useState<FilterState>({
+    cuisine: null,
+    dietary: []
+  });
+
+  // Apply filters whenever source recipes or filter settings change
+  useEffect(() => {
+    const sourceRecipes = showFavorites ? favorites : filteredRecipes;
+
+    const filtered = RecipeService.applyAdvancedFilters(
+      sourceRecipes,
+      filters.cuisine,
+      filters.dietary
+    );
+
+    setDisplayedRecipes(filtered);
+  }, [filteredRecipes, filters, favorites, showFavorites, setDisplayedRecipes]);
+
+  // Handle filter changes
   const handleFilterChange = useCallback((newCuisineType: string | null, newDietaryPreferences: string[]): void => {
     setFilters({
       cuisine: newCuisineType,
@@ -119,17 +127,25 @@ const AppContent: React.FC = () => {
     });
   }, []);
 
-  /**
-   * Toggle favorites view
-   */
-  const toggleFavorites = useCallback((): void => {
-    setShowFavorites(prev => !prev);
-  }, []);
+  const hasActiveFilters = filters.cuisine !== null || filters.dietary.length > 0;
 
-  /**
-   * Determine page title based on current view and filters
-   */
-  const getPageTitle = useCallback((): string => {
+  return {
+    filters,
+    hasActiveFilters,
+    handleFilterChange
+  };
+};
+
+/**
+ * Generate page title based on current state
+ */
+const usePageTitle = (
+  showFavorites: boolean,
+  filters: FilterState,
+  filteredRecipes: Recipe[],
+  recipes: Recipe[]
+): string => {
+  return useCallback((): string => {
     if (showFavorites) {
       return "My Favorite Recipes";
     }
@@ -144,43 +160,58 @@ const AppContent: React.FC = () => {
     return (filteredRecipes.length === recipes.length)
       ? "Discover Recipes"
       : "Matching Recipes";
-  }, [showFavorites, filters, filteredRecipes.length, recipes.length]);
+  }, [showFavorites, filters, filteredRecipes.length, recipes.length])();
+};
 
-  const pageTitle = getPageTitle();
-  const hasActiveFilters = filters.cuisine !== null || filters.dietary.length > 0;
+/**
+ * Main application content component
+ */
+const AppContent: React.FC = () => {
+  const {
+    recipes,
+    filteredRecipes,
+    displayedRecipes,
+    setDisplayedRecipes,
+    isLoading,
+    error,
+    showFavorites,
+    handleSearch,
+    toggleFavorites,
+    favorites
+  } = useRecipeManagement();
+
+  const {
+    filters,
+    hasActiveFilters,
+    handleFilterChange
+  } = useRecipeFilters(filteredRecipes, favorites, showFavorites, setDisplayedRecipes);
+
+  // Derived state
+  const pageTitle = usePageTitle(showFavorites, filters, filteredRecipes, recipes);
   const shouldShowRecipes = (!isLoading || showFavorites) && !error;
   const shouldShowNoRecipesMessage = !isLoading && !error && displayedRecipes.length === 0;
 
   return (
     <div className="app-content">
-      <header className="app-header">
-        <h1>Recipe Finder</h1>
-        <p>Find delicious recipes based on ingredients you have!</p>
-      </header>
+      <Header />
       <main className="app-main">
-        {/* Search and Filter UI */}
-        <SearchBar onSearch={handleSearch} />
-        <AdvancedFilters onFilterChange={handleFilterChange} />
+        <SearchAndFilters
+          onSearch={handleSearch}
+          onFilterChange={handleFilterChange}
+          showFavorites={showFavorites}
+          onToggleFavorites={toggleFavorites}
+        />
 
-        <div className="favorites-toggle-container">
-          <button
-            className={`favorites-toggle-btn ${showFavorites ? 'active' : ''}`}
-            onClick={toggleFavorites}
-          >
-            {showFavorites ? 'Show All Recipes' : 'Show Favorites'}
-          </button>
-        </div>
-
-        {/* Content States */}
-        {isLoading && !showFavorites && <LoadingIndicator />}
-        {error && !isLoading && !showFavorites && <ErrorDisplay message={error} />}
-        {shouldShowRecipes && <RecipeList recipes={displayedRecipes} title={pageTitle} />}
-        {shouldShowNoRecipesMessage && (
-          <NoRecipesMessage
-            showFavorites={showFavorites}
-            hasActiveFilters={hasActiveFilters}
-          />
-        )}
+        <ContentDisplay
+          isLoading={isLoading}
+          error={error}
+          showFavorites={showFavorites}
+          shouldShowRecipes={shouldShowRecipes}
+          shouldShowNoRecipesMessage={shouldShowNoRecipesMessage}
+          hasActiveFilters={hasActiveFilters}
+          recipes={displayedRecipes}
+          title={pageTitle}
+        />
       </main>
     </div>
   );
