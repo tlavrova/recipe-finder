@@ -87,87 +87,6 @@
   color: white;
 }
 
-/* Loading spinner */
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 2rem 0;
-}
-
-.loading-spinner {
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-radius: 50%;
-  border-top: 4px solid #2c3e50;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* Error container */
-.error-container {
-  background-color: #ffebee;
-  border: 1px solid #ffcdd2;
-  color: #c62828;
-  padding: 1rem;
-  border-radius: 4px;
-  margin: 2rem 0;
-  max-width: 600px;
-  text-align: center;
-}
-
-.error-container button {
-  background-color: #c62828;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 0.5rem;
-}
-
-/* No favorites message */
-.no-favorites-message {
-  background-color: #e8f5e9;
-  border: 1px solid #c8e6c9;
-  color: #2e7d32;
-  padding: 2rem;
-  border-radius: 8px;
-  margin: 2rem 0;
-  max-width: 600px;
-  text-align: center;
-}
-
-.no-favorites-message p {
-  margin: 0.5rem 0;
-}
-
-/* No recipes message */
-.no-recipes-message {
-  background-color: #f8f9fa;
-  border: 1px solid #dee2e6;
-  color: #495057;
-  padding: 2rem;
-  border-radius: 8px;
-  margin: 2rem 0;
-  max-width: 600px;
-  text-align: center;
-}
-
-.no-recipes-message p {
-  margin: 0.5rem 0;
-}
-
 /* Responsive styling */
 @media (max-width: 768px) {
   .App-header h1 {
@@ -185,13 +104,6 @@
   .favorites-toggle-btn {
     padding: 0.5rem 1.2rem;
     font-size: 0.9rem;
-  }
-
-  .no-favorites-message,
-  .error-container,
-  .no-recipes-message {
-    margin: 1.5rem 0.75rem;
-    padding: 1.5rem;
   }
 }
 

@@ -1,0 +1,22 @@
+.no-recipes-message,
+.no-favorites-message {
+  text-align: center;
+  padding: 2rem;
+  margin: 1rem 0;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.no-recipes-message p,
+.no-favorites-message p {
+  margin: 0.5rem 0;
+  color: #6c757d;
+}
+
+.no-recipes-message p:first-child,
+.no-favorites-message p:first-child {
+  font-weight: 500;
+  color: #343a40;
+  font-size: 1.1rem;
+}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import RecipeList from './components/RecipeList/RecipeList';
 import SearchBar from './components/SearchBar/SearchBar';
@@ -6,23 +6,38 @@ import AdvancedFilters from './components/AdvancedFilters/AdvancedFilters';
 import { Recipe } from './types/Recipe';
 import { RecipeService } from './services/RecipeService';
 import { FavoritesProvider, useFavorites } from './context/FavoritesContext';
+import { FilterState } from './types/FilterState';
+import NoRecipesMessage from './components/Messages/NoRecipesMessage';
+import LoadingIndicator from './components/Messages/LoadingIndicator';
+import ErrorDisplay from './components/Messages/ErrorDisplay';
 
-// Create an inner App component to use the favorites context
-const AppContent = () => {
+/**
+ * Main application content component
+ */
+const AppContent: React.FC = () => {
+  // Recipe state
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);
   const [displayedRecipes, setDisplayedRecipes] = useState<Recipe[]>([]);
+
+  // UI state
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [showFavorites, setShowFavorites] = useState<boolean>(false);
-  const [cuisineFilter, setCuisineFilter] = useState<string | null>(null);
-  const [dietaryFilters, setDietaryFilters] = useState<string[]>([]);
+
+  // Filter state
+  const [filters, setFilters] = useState<FilterState>({
+    cuisine: null,
+    dietary: []
+  });
 
   const { favorites } = useFavorites();
 
-  // Load initial random recipes when app starts
+  /**
+   * Load initial random recipes when app starts
+   */
   useEffect(() => {
-    const loadInitialRecipes = async () => {
+    const loadInitialRecipes = async (): Promise<void> => {
       try {
         setIsLoading(true);
         setError(null);
@@ -41,26 +56,25 @@ const AppContent = () => {
     loadInitialRecipes();
   }, []);
 
-  // Apply advanced filters whenever filteredRecipes, cuisineFilter, or dietaryFilters change
+  /**
+   * Apply advanced filters whenever source recipes or filter settings change
+   */
   useEffect(() => {
-    if (showFavorites) {
-      const filteredFavorites = RecipeService.applyAdvancedFilters(
-        favorites,
-        cuisineFilter,
-        dietaryFilters
-      );
-      setDisplayedRecipes(filteredFavorites);
-    } else {
-      const filtered = RecipeService.applyAdvancedFilters(
-        filteredRecipes,
-        cuisineFilter,
-        dietaryFilters
-      );
-      setDisplayedRecipes(filtered);
-    }
-  }, [filteredRecipes, cuisineFilter, dietaryFilters, favorites, showFavorites]);
+    const sourceRecipes = showFavorites ? favorites : filteredRecipes;
 
-  const handleSearch = async (ingredients: string[]) => {
+    const filtered = RecipeService.applyAdvancedFilters(
+      sourceRecipes,
+      filters.cuisine,
+      filters.dietary
+    );
+
+    setDisplayedRecipes(filtered);
+  }, [filteredRecipes, filters, favorites, showFavorites]);
+
+  /**
+   * Handle ingredient search
+   */
+  const handleSearch = useCallback(async (ingredients: string[]): Promise<void> => {
     setShowFavorites(false);
 
     if (ingredients.length === 0) {
@@ -82,8 +96,8 @@ const AppContent = () => {
 
       // Flatten and remove duplicates
       const allRecipes = recipeResults.flat();
-      const uniqueRecipes = allRecipes.filter((recipe, index, self) =>
-        index === self.findIndex((r) => r.id === recipe.id)
+      const uniqueRecipes = allRecipes.filter(
+        (recipe, index, self) => index === self.findIndex(r => r.id === recipe.id)
       );
 
       setFilteredRecipes(uniqueRecipes);
@@ -93,35 +107,49 @@ const AppContent = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [recipes]);
 
-  const handleFilterChange = (newCuisineType: string | null, newDietaryPreferences: string[]) => {
-    setCuisineFilter(newCuisineType);
-    setDietaryFilters(newDietaryPreferences);
-  };
+  /**
+   * Handle filter changes
+   */
+  const handleFilterChange = useCallback((newCuisineType: string | null, newDietaryPreferences: string[]): void => {
+    setFilters({
+      cuisine: newCuisineType,
+      dietary: newDietaryPreferences
+    });
+  }, []);
 
-  const toggleFavorites = () => {
+  /**
+   * Toggle favorites view
+   */
+  const toggleFavorites = useCallback((): void => {
     setShowFavorites(prev => !prev);
-  };
+  }, []);
 
-  // Determine page title based on current view and filters
-  const getPageTitle = () => {
+  /**
+   * Determine page title based on current view and filters
+   */
+  const getPageTitle = useCallback((): string => {
     if (showFavorites) {
       return "My Favorite Recipes";
     }
 
-    if (cuisineFilter || dietaryFilters.length > 0) {
+    if (filters.cuisine || filters.dietary.length > 0) {
       const parts = [];
-      if (cuisineFilter) parts.push(cuisineFilter);
-      if (dietaryFilters.length > 0) parts.push(dietaryFilters.join(", "));
+      if (filters.cuisine) parts.push(filters.cuisine);
+      if (filters.dietary.length > 0) parts.push(filters.dietary.join(", "));
       return `Filtered Recipes (${parts.join(" · ")})`;
     }
 
-    return (filteredRecipes.length === recipes.length) ? "Discover Recipes" : "Matching Recipes";
-  };
+    return (filteredRecipes.length === recipes.length)
+      ? "Discover Recipes"
+      : "Matching Recipes";
+  }, [showFavorites, filters, filteredRecipes.length, recipes.length]);
 
   const pageTitle = getPageTitle();
-  const hasActiveFilters = cuisineFilter !== null || dietaryFilters.length > 0;
+  const hasActiveFilters = filters.cuisine !== null || filters.dietary.length > 0;
+  const shouldShowRecipes = (!isLoading || showFavorites) && !error;
+  const shouldShowNoRecipesMessage = !isLoading && !error && displayedRecipes.length === 0;
 
   return (
     <div className="App">
@@ -130,13 +158,10 @@ const AppContent = () => {
         <p>Find delicious recipes based on ingredients you have!</p>
       </header>
       <main className="App-main">
-        {/* Search bar for ingredient input */}
+        {/* Search and Filter UI */}
         <SearchBar onSearch={handleSearch} />
-
-        {/* Advanced filters component */}
         <AdvancedFilters onFilterChange={handleFilterChange} />
 
-        {/* Toggle favorites button */}
         <div className="favorites-toggle-container">
           <button
             className={`favorites-toggle-btn ${showFavorites ? 'active' : ''}`}
@@ -146,72 +171,30 @@ const AppContent = () => {
           </button>
         </div>
 
-        {/* Loading state */}
-        {isLoading && !showFavorites && (
-          <div className="loading-container">
-            <div className="loading-spinner"></div>
-            <p>Loading recipes...</p>
-          </div>
-        )}
-
-        {/* Error state */}
-        {error && !isLoading && !showFavorites && (
-          <div className="error-container">
-            <p>{error}</p>
-            <button onClick={() => window.location.reload()}>Try Again</button>
-          </div>
-        )}
-
-        {/* Show recipes using the RecipeList component */}
-        {(!isLoading || showFavorites) && !error && (
-          <RecipeList
-            recipes={displayedRecipes}
-            title={pageTitle}
+        {/* Content States */}
+        {isLoading && !showFavorites && <LoadingIndicator />}
+        {error && !isLoading && !showFavorites && <ErrorDisplay message={error} />}
+        {shouldShowRecipes && <RecipeList recipes={displayedRecipes} title={pageTitle} />}
+        {shouldShowNoRecipesMessage && (
+          <NoRecipesMessage
+            showFavorites={showFavorites}
+            hasActiveFilters={hasActiveFilters}
           />
-        )}
-
-        {/* Show message when no recipes match filters */}
-        {!isLoading && !error && displayedRecipes.length === 0 && (
-          <div className={showFavorites ? "no-favorites-message" : "no-recipes-message"}>
-            {showFavorites ? (
-              hasActiveFilters ? (
-                <>
-                  <p>None of your favorites match the selected filters.</p>
-                  <p>Try changing your filter selections.</p>
-                </>
-              ) : (
-                <>
-                  <p>You haven't saved any favorite recipes yet!</p>
-                  <p>Click the star icon on recipes you like to save them here.</p>
-                </>
-              )
-            ) : (
-              hasActiveFilters ? (
-                <>
-                  <p>No recipes match your current filters.</p>
-                  <p>Try adjusting your filter selections.</p>
-                </>
-              ) : (
-                <>
-                  <p>No recipes found for these ingredients.</p>
-                  <p>Try searching with different ingredients.</p>
-                </>
-              )
-            )}
-          </div>
         )}
       </main>
     </div>
   );
 };
 
-// Main App component that provides the context
-function App() {
+/**
+ * Main App component that provides the context
+ */
+const App: React.FC = () => {
   return (
     <FavoritesProvider>
       <AppContent />
     </FavoritesProvider>
   );
-}
+};
 
 export default App;
