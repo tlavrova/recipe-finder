@@ -1,46 +1,13 @@
 .App {
-  text-align: center;
   min-height: 100vh;
   background-color: #f5f5f5;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
+/* Animation for logo if used */
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
-}
-
-.App-header {
-  background-color: #2c3e50;
-  padding: 2rem 0;
-  color: white;
-}
-
-.App-header h1 {
-  margin: 0;
-  font-size: 2.5rem;
-}
-
-.App-header p {
-  margin: 0.5rem 0 0;
-  font-size: 1.2rem;
-  opacity: 0.9;
-}
-
-.App-main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .App-link {
@@ -53,79 +20,5 @@
   }
   to {
     transform: rotate(360deg);
-  }
-}
-
-/* Favorites toggle button */
-.favorites-toggle-container {
-  margin: 1rem 0 2rem;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.favorites-toggle-btn {
-  background-color: #fff;
-  color: #2c3e50;
-  border: 2px solid #2c3e50;
-  padding: 0.6rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 600;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.favorites-toggle-btn:hover {
-  background-color: #2c3e50;
-  color: white;
-}
-
-.favorites-toggle-btn.active {
-  background-color: #2c3e50;
-  color: white;
-}
-
-/* Responsive styling */
-@media (max-width: 768px) {
-  .App-header h1 {
-    font-size: 2rem;
-  }
-
-  .App-header p {
-    font-size: 1rem;
-  }
-
-  .App-main {
-    padding: 1.5rem 0.75rem;
-  }
-
-  .favorites-toggle-btn {
-    padding: 0.5rem 1.2rem;
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .App-header {
-    padding: 1.5rem 0;
-  }
-
-  .App-header h1 {
-    font-size: 1.8rem;
-  }
-
-  .App-header p {
-    font-size: 0.9rem;
-  }
-
-  .App-main {
-    padding: 1rem 0.5rem;
-  }
-
-  .favorites-toggle-btn {
-    padding: 0.4rem 1rem;
-    font-size: 0.85rem;
   }
 }
