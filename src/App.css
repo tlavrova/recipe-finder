@@ -37,8 +37,8 @@
   margin: 0 auto;
   padding: 2rem;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .App-link {
@@ -54,23 +54,53 @@
   }
 }
 
+/* Favorites toggle button */
+.favorites-toggle-container {
+  margin: 1rem 0 2rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.favorites-toggle-btn {
+  background-color: #fff;
+  color: #2c3e50;
+  border: 2px solid #2c3e50;
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.favorites-toggle-btn:hover {
+  background-color: #2c3e50;
+  color: white;
+}
+
+.favorites-toggle-btn.active {
+  background-color: #2c3e50;
+  color: white;
+}
+
+/* Loading spinner */
 .loading-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 40px;
-  width: 100%;
+  margin: 2rem 0;
 }
 
 .loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #2c3e50;
+  border: 4px solid rgba(0, 0, 0, 0.1);
   border-radius: 50%;
+  border-top: 4px solid #2c3e50;
+  width: 40px;
+  height: 40px;
   animation: spin 1s linear infinite;
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
 }
 
 @keyframes spin {
@@ -82,32 +112,40 @@
   }
 }
 
+/* Error container */
 .error-container {
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+  color: #c62828;
+  padding: 1rem;
+  border-radius: 4px;
+  margin: 2rem 0;
+  max-width: 600px;
   text-align: center;
-  padding: 30px;
-  background-color: #fff5f5;
-  border: 1px solid #ffcccc;
-  border-radius: 8px;
-  margin: 30px 0;
-}
-
-.error-container p {
-  color: #e53935;
-  margin-bottom: 16px;
-  font-size: 1.1rem;
 }
 
 .error-container button {
-  background-color: #2c3e50;
+  background-color: #c62828;
   color: white;
   border: none;
+  padding: 0.5rem 1rem;
   border-radius: 4px;
-  padding: 10px 20px;
-  font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s;
+  margin-top: 0.5rem;
 }
 
-.error-container button:hover {
-  background-color: #1a2530;
+/* No favorites message */
+.no-favorites-message {
+  background-color: #e8f5e9;
+  border: 1px solid #c8e6c9;
+  color: #2e7d32;
+  padding: 2rem;
+  border-radius: 8px;
+  margin: 2rem 0;
+  max-width: 600px;
+  text-align: center;
+}
+
+.no-favorites-message p {
+  margin: 0.5rem 0;
 }

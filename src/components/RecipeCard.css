@@ -8,6 +8,7 @@
   margin: 16px;
   background-color: white;
   transition: transform 0.3s ease;
+  position: relative;
 }
 
 .recipe-card:hover {
@@ -61,4 +62,32 @@
 .recipe-card__instructions p {
   line-height: 1.5;
   color: #666;
+}
+
+.favorite-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+  z-index: 10;
+  padding: 0;
+}
+
+.favorite-button:hover {
+  transform: scale(1.1);
+}
+
+.favorite-button--active {
+  color: #ff6b6b;
 }

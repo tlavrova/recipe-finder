@@ -4,12 +4,17 @@ import RecipeList from './components/RecipeList/RecipeList';
 import SearchBar from './components/SearchBar/SearchBar';
 import { Recipe } from './types/Recipe';
 import { RecipeService } from './services/RecipeService';
+import { FavoritesProvider, useFavorites } from './context/FavoritesContext';
 
-function App() {
+// Create an inner App component to use the favorites context
+const AppContent = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [showFavorites, setShowFavorites] = useState<boolean>(false);
+
+  const { favorites } = useFavorites();
 
   // Load initial random recipes when app starts
   useEffect(() => {
@@ -32,6 +37,8 @@ function App() {
   }, []);
 
   const handleSearch = async (ingredients: string[]) => {
+    setShowFavorites(false);
+
     if (ingredients.length === 0) {
       setFilteredRecipes(recipes);
       return;
@@ -64,6 +71,15 @@ function App() {
     }
   };
 
+  const toggleFavorites = () => {
+    setShowFavorites(prev => !prev);
+  };
+
+  // Determine which recipes to display
+  const displayedRecipes = showFavorites ? favorites : filteredRecipes;
+  const pageTitle = showFavorites ? "My Favorite Recipes" :
+                   (filteredRecipes.length === recipes.length ? "Discover Recipes" : "Matching Recipes");
+
   return (
     <div className="App">
       <header className="App-header">
@@ -74,8 +90,18 @@ function App() {
         {/* Search bar for ingredient input */}
         <SearchBar onSearch={handleSearch} />
 
+        {/* Toggle favorites button */}
+        <div className="favorites-toggle-container">
+          <button
+            className={`favorites-toggle-btn ${showFavorites ? 'active' : ''}`}
+            onClick={toggleFavorites}
+          >
+            {showFavorites ? 'Show All Recipes' : 'Show Favorites'}
+          </button>
+        </div>
+
         {/* Loading state */}
-        {isLoading && (
+        {isLoading && !showFavorites && (
           <div className="loading-container">
             <div className="loading-spinner"></div>
             <p>Loading recipes...</p>
@@ -83,7 +109,7 @@ function App() {
         )}
 
         {/* Error state */}
-        {error && !isLoading && (
+        {error && !isLoading && !showFavorites && (
           <div className="error-container">
             <p>{error}</p>
             <button onClick={() => window.location.reload()}>Try Again</button>
@@ -91,14 +117,31 @@ function App() {
         )}
 
         {/* Show recipes using the RecipeList component */}
-        {!isLoading && !error && (
+        {(!isLoading || showFavorites) && !error && (
           <RecipeList
-            recipes={filteredRecipes}
-            title={filteredRecipes.length === recipes.length ? "Discover Recipes" : "Matching Recipes"}
+            recipes={displayedRecipes}
+            title={pageTitle}
           />
+        )}
+
+        {/* Show message when no favorites */}
+        {showFavorites && favorites.length === 0 && (
+          <div className="no-favorites-message">
+            <p>You haven't saved any favorite recipes yet!</p>
+            <p>Click the star icon on recipes you like to save them here.</p>
+          </div>
         )}
       </main>
     </div>
+  );
+};
+
+// Main App component that provides the context
+function App() {
+  return (
+    <FavoritesProvider>
+      <AppContent />
+    </FavoritesProvider>
   );
 }
 
