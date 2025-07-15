@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import RecipeCard from './components/RecipeCard';
 import RecipeList from './components/RecipeList/RecipeList';
+import SearchBar from './components/SearchBar/SearchBar';
 import { Recipe } from './types/Recipe';
 
 function App() {
@@ -54,6 +55,27 @@ function App() {
     }
   ];
 
+  const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>(sampleRecipes);
+
+  const handleSearch = (ingredients: string[]) => {
+    if (ingredients.length === 0) {
+      // If no ingredients specified, show all recipes
+      setFilteredRecipes(sampleRecipes);
+      return;
+    }
+
+    // Filter recipes that contain at least one of the specified ingredients
+    const filtered = sampleRecipes.filter(recipe => {
+      return ingredients.some(ingredient =>
+        recipe.ingredients.some(recipeIngredient =>
+          recipeIngredient.toLowerCase().includes(ingredient.toLowerCase())
+        )
+      );
+    });
+
+    setFilteredRecipes(filtered);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -61,12 +83,14 @@ function App() {
         <p>Find delicious recipes based on ingredients you have!</p>
       </header>
       <main className="App-main">
-        {/* Show a single recipe card as an example */}
-        <h2>Featured Recipe</h2>
-        <RecipeCard recipe={sampleRecipes[0]} />
+        {/* Search bar for ingredient input */}
+        <SearchBar onSearch={handleSearch} />
 
         {/* Show all recipes using the RecipeList component */}
-        <RecipeList recipes={sampleRecipes} title="All Recipes" />
+        <RecipeList
+          recipes={filteredRecipes}
+          title={filteredRecipes.length === sampleRecipes.length ? "All Recipes" : "Matching Recipes"}
+        />
       </main>
     </div>
   );
