@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/src/components/RecipeList/RecipeList.tsx">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/components/RecipeList/RecipeList.tsx" />
+              <option name="originalContent" value="import React from 'react';&#10;import './RecipeList.css';&#10;import RecipeCard from '../RecipeCard';&#10;import { Recipe } from '../../types/Recipe';&#10;import NoRecipesMessage from '../Messages/NoRecipesMessage';&#10;&#10;interface RecipeListProps {&#10;  recipes: Recipe[];&#10;  title?: string;&#10;}&#10;&#10;const RecipeList: React.FC&lt;RecipeListProps&gt; = ({ recipes, title }) =&gt; {&#10;  return (&#10;    &lt;section className=&quot;recipe-list-container&quot;&gt;&#10;      {title &amp;&amp; &lt;h2 className=&quot;recipe-list-title&quot;&gt;{title}&lt;/h2&gt;}&#10;&#10;      {recipes.length === 0 ? (&#10;        &lt;div className=&quot;recipe-list-empty&quot;&gt;&#10;          &lt;NoRecipesMessage showFavorites={false} hasActiveFilters={false} /&gt;&#10;        &lt;/div&gt;&#10;      ) : (&#10;        &lt;div className=&quot;recipe-list-grid&quot;&gt;&#10;          {recipes.map(recipe =&gt; (&#10;            &lt;RecipeCard key={recipe.id} recipe={recipe} /&gt;&#10;          ))}&#10;        &lt;/div&gt;&#10;      )}&#10;    &lt;/section&gt;&#10;  );&#10;};&#10;&#10;export default RecipeList;&#10;" />
+              <option name="updatedContent" value="import React from 'react';&#10;import './RecipeList.css';&#10;import RecipeCard from '../RecipeCard';&#10;import { Recipe } from '../../types/Recipe';&#10;&#10;interface RecipeListProps {&#10;  recipes: Recipe[];&#10;  title?: string;&#10;}&#10;&#10;const RecipeList: React.FC&lt;RecipeListProps&gt; = ({ recipes, title }) =&gt; {&#10;  return (&#10;    &lt;section className=&quot;recipe-list-container&quot;&gt;&#10;      {title &amp;&amp; &lt;h2 className=&quot;recipe-list-title&quot;&gt;{title}&lt;/h2&gt;}&#10;      &#10;      &lt;div className=&quot;recipe-list-grid&quot;&gt;&#10;        {recipes.map(recipe =&gt; (&#10;          &lt;RecipeCard key={recipe.id} recipe={recipe} /&gt;&#10;        ))}&#10;      &lt;/div&gt;&#10;    &lt;/section&gt;&#10;  );&#10;};&#10;&#10;export default RecipeList;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
